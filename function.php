@@ -1,4 +1,5 @@
 <?php
+
 function getUsers() {
     return [
         ["email" => "user1@example.com", "password" => "user1"],
@@ -11,29 +12,42 @@ function getUsers() {
 
 function validateLoginCredentials($email, $password) {
     $errors = [];
+
+    // Validate email
     if (empty($email)) {
         $errors[] = "Email is required.";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $errors[] = "Invalid Email.";
-    } else {
+        $errors[] = "Invalid Email";
+    }
+
+    // Validate password
+    if (empty($password)) {
+        $errors[] = "Password is required.";
+    }
+
+    // Check if email exists
+    if (empty($errors)) {
         $users = getUsers();
         $emailExists = false;
+
+        // Check if the email is in the users list
         foreach ($users as $user) {
             if ($user['email'] === $email) {
                 $emailExists = true;
                 break;
             }
         }
+
         if (!$emailExists) {
             $errors[] = "Invalid Email.";
         }
     }
-    if (empty($password)) {
-        $errors[] = "Password is required.";
-    }
+
     return $errors;
 }
 
+?>
+<?php
 function checkLoginCredentials($email, $password, $users) {
     foreach ($users as $user) {
         if ($user['email'] === $email && $user['password'] === $password) {
