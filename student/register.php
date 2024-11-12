@@ -94,8 +94,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <td><?php echo htmlspecialchars($student['first_name']); ?></td>
                         <td><?php echo htmlspecialchars($student['last_name']); ?></td>
                         <td>
-                            <a href="edit.php?student_id=<?php echo urlencode($student['student_id']); ?>" class="btn btn-info btn-sm">Edit</a>
-                            <a href="delete.php?student_id=<?php echo urlencode($student['student_id']); ?>" class="btn btn-danger btn-sm">Delete</a>
+                            <a href="edit.php?student_id=<?php echo urlencode($student['student_id']); ?>" class="btn btn-info btn-sm fw-bold">Edit</a>
+                            <a href="delete.php?student_id=<?php echo urlencode($student['student_id']); ?>" class="btn btn-danger btn-sm fw-bold">Delete</a>
+                            <a href="attach-subject.php?student_id=<?php echo urlencode($student['student_id']); ?>" class="btn btn-warning btn-sm fw-bold">Attach Subject</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
