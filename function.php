@@ -73,4 +73,4 @@ function displayErrors($errors) {
     $output .= "</ul>";
     return $output;
 }
-?>
+
