@@ -1,38 +1,3 @@
-<?php
-session_start();
-$pageTitle = "Register Student";
-include ('../header.php');
-include ('../function.php');
-guard();
-
-$errors = [];
-$student_data = [];
-
-if (!isset($_SESSION['student_data'])) {
-    $_SESSION['student_data'] = [];
-}
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $student_data = [
-        'student_id' => $_POST['student_id'],
-        'first_name' => $_POST['first_name'],
-        'last_name' => $_POST['last_name']
-    ];
-
-    $errors = validateStudentData($student_data);
-
-    if (empty($errors)) {
-        $duplicate_index = getSelectedStudentIndex($student_data['student_id']);
-        if ($duplicate_index !== null) {
-            $errors[] = "Student ID " . htmlspecialchars($student_data['student_id']) . " already exists.";
-        } else {
-            $_SESSION['student_data'][] = $student_data;
-            header("Location: register.php");
-            exit;
-        }
-    }
-}
-?>
 
 <div class="container mt-5">
 
