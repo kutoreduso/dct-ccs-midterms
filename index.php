@@ -1,91 +1,73 @@
 <?php
-session_start();
-
+session_start(); 
 $pageTitle = "Log In";
-
-include("header.php");
-include('function.php');
-
 
 if (!empty($_SESSION['email'])) {
     header("Location: dashboard.php");
     exit;
 }
 
+
+include ('function.php'); 
+include ('header.php');
+
 $errors = [];
 $notification = null;
 
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $email = $_POST['txtemail'] ?? '';
-    $password = $_POST['txtpassword'] ?? '';
-
+    $email = $_POST['txtEmail'] ?? '';
+    $password = $_POST['txtPassword'] ?? '';
 
     $errors = validateLoginCredentials($email, $password);
-    
+
     if (empty($errors)) {
         $users = getUsers();
-        
-
         if (checkLoginCredentials($email, $password, $users)) {
             $_SESSION['email'] = $email;
-            $_SESSION['current_page'] = 'dashboard.php';
+            $_SESSION['current_page'] = 'dashboard.php'; 
             header("Location: dashboard.php");
             exit;
         } else {
-            $notification = 'Invalid email or password.';
+          
+            $notification = "<li>Invalid Email.</li>";
         }
+    } else {
+       
+        $notification = displayErrors($errors);
     }
 }
 ?>
 
-<main>
-    <div class="container">
+<?php include('header.php'); ?>
 
-        <?php if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($notification)): ?>
-            <div class="col-md-4 mb-3 mx-auto col-3">
+    <br>
+    <div class="container col-6">
+        <?php if (!empty($notification)): ?>
+            <div class="col-md-4 mb-3 mx-auto">
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <strong>System Error:</strong>
-                    <?php echo htmlspecialchars($notification); ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <strong>System Errors</strong>
+                    <?php echo $notification; ?>
+                    <button type="button" class="btn-close " data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             </div>
-        <?php endif; ?>
-        
-  
-        <?php if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($errors)): ?>
-            <div class="col-md-4 mb-3 mx-auto col-3">
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <strong>Validation Errors:</strong>
-                    <?php echo displayErrors($errors); ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
             </div>
         <?php endif; ?>
-        
-
-        <form method="POST" action="">
-            <div class="p-4">
-                <div class="card col-3 mx-auto">
-                    <div class="card-header fs-3 fw-bold">
-                        Login
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email address</label>
-                            <input type="email" name="email" class="form-control" id="txtemail" aria-describedby="emailHelp" value="<?php echo htmlspecialchars($email ?? ''); ?>" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <input type="password" name="password" class="form-control" id="txtpassword" required>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </div>
-                </div>
+        <form method="post">
+            <div class="card col-3 p-3 mx-auto">
+                <h1 class="fw-bold">Login</h1> <br><hr>
+            
+            <div class="mb-3">
+                <label for="txtEmail" class="form-label">Email address</label>
+                <input type="text" class="form-control" id="txtEmail" name="txtEmail">
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label">Password</label>
+                <input type="password" class="form-control" id="txtPassword" name="txtPassword"><br>
+            </div>
+                <button type="submit" class="btn btn-primary" style="width:100%;">Submit</button>
+            </div>
             </div>
         </form>
-    </div>
-</main>
-
-<?php include("footer.php"); ?>
+    
+        
+<?php include('footer.php'); ?>
