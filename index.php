@@ -1,52 +1,65 @@
-
-<?php 
+<?php
 session_start();
 
-$pageTitle="Log In";
+$pageTitle = "Log In";
 
-    include("header.php");
-    include('function.php');
+include("header.php");
+include('function.php');
 
+// Redirect user if already logged in
+if (!empty($_SESSION['email'])) {
+    header("Location: dashboard.php");
+    exit;
+}
 
-    if (!empty($_SESSION['email'])) {
-        header("Location: dashboard.php");
-        exit;
-    }
+$errors = [];
+$notification = null;
 
-    $errors = [];
-    $notification = null;
+// Only process the form when the user submits
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $email = $_POST['email'] ?? '';
+    $password = $_POST['password'] ?? '';
+
+    // Validate the login credentials
+    $errors = validateLoginCredentials($email, $password);
     
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $email = $_POST['email'] ?? '';
-        $password = $_POST['password'] ?? '';
-    
-        $errors = validateLoginCredentials($email, $password); // Fix: added semicolon here
-    
-        if (empty($errors)) {
-            $users = getUsers();
-            if (checkLoginCredentials($email, $password, $users)) {
-                $_SESSION['email'] = $email;
-                $_SESSION['current_page'] = 'dashboard.php';
-                header("Location: dashboard.php");
-                exit;
-            } else {
-                $notification = '<li> Invalid Email.</li>';
-            }
+    if (empty($errors)) {
+        $users = getUsers();
+        
+        // Check the provided email and password
+        if (checkLoginCredentials($email, $password, $users)) {
+            $_SESSION['email'] = $email;
+            $_SESSION['current_page'] = 'dashboard.php';
+            header("Location: dashboard.php");
+            exit;
+        } else {
+            $notification = 'Invalid email or password.'; // Login failure message
         }
     }
-    ?>
+}
+?>
     <main>
     <div class="container">
-        <?php if (!empty($notification)): ?>
-            <div class="col-md-4 mb-3">
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <strong>System Errors</strong>
-                    <?php echo $notification; ?>
-                    <button type="button" class="btn-close " data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
+    <?php if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($notification)): ?>
+        <div class="col-md-4 mb-3 mx-auto col-3">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>System Error:</strong>
+                <?php echo htmlspecialchars($notification); ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-        <?php endif; ?>
-        
+        </div>
+    <?php endif; ?>
+    
+    <?php if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($errors)): ?>
+        <div class="col-md-4 mb-3 mx-auto col-3">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Validation Errors:</strong>
+                <?php echo displayErrors($errors); ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    <?php endif; ?>
+    
 <form method= "POST" action="">
   <div class="p-4">
   <div class="card col-3 mx-auto">
