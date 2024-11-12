@@ -17,8 +17,8 @@ $notification = null;
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $email = $_POST['email'] ?? '';
-    $password = $_POST['password'] ?? '';
+    $email = $_POST['txtemail'] ?? '';
+    $password = $_POST['txtpassword'] ?? '';
 
 
     $errors = validateLoginCredentials($email, $password);
@@ -73,11 +73,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <div class="card-body">
                         <div class="mb-3">
                             <label for="email" class="form-label">Email address</label>
-                            <input type="email" name="email" class="form-control" id="email" aria-describedby="emailHelp" value="<?php echo htmlspecialchars($email ?? ''); ?>" required>
+                            <input type="email" name="email" class="form-control" id="txtemail" aria-describedby="emailHelp" value="<?php echo htmlspecialchars($email ?? ''); ?>" required>
                         </div>
                         <div class="mb-3">
                             <label for="password" class="form-label">Password</label>
-                            <input type="password" name="password" class="form-control" id="password" required>
+                            <input type="password" name="password" class="form-control" id="txtpassword" required>
                         </div>
                         
                         <button type="submit" class="btn btn-primary">Submit</button>
