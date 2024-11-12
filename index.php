@@ -2,6 +2,16 @@
 <?php 
     include("header.php");
 
+    session_start();
+    $pageTitle = "Log In"
+
+
+    if(!empty($_SESSION['email'])) {
+
+    }
+
+
+    include("function.php");
 ?>
 <form>
   <div class="p-4">
@@ -12,7 +22,7 @@
   <div class="card-body">
   <div class="mb-3">
     <label for="exampleInputEmail1" class="form-label">Email address</label>
-    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
   <div class="mb-3">
     <label for="exampleInputPassword1" class="form-label">Password</label>
     <input type="password" class="form-control" id="exampleInputPassword1">
