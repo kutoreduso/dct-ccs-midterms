@@ -6,7 +6,7 @@
 <form>
   <div class="p-4">
   <div class="card col-3 mx-auto">
-  <div class="card-header">
+  <div class="card-header fs-3 fw-bold">
     Login
   </div>
   <div class="card-body">
