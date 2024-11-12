@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
         <?php endif; ?>
         <form method="post">
-            <div class="card col-3 p-3 mx-auto">
+            <div class="card col-5 p-3 mx-auto">
                 <h1 class="fw-bold">Login</h1> <br><hr>
             
             <div class="mb-3">
