@@ -1,7 +1,42 @@
+<?php
+session_start();
+$pageTitle = "Register Student";
+include ('../header.php');
+include ('../function.php');
+guard();
+
+$errors = [];
+$student_data = [];
+
+if (!isset($_SESSION['student_data'])) {
+    $_SESSION['student_data'] = [];
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $student_data = [
+        'student_id' => $_POST['student_id'],
+        'first_name' => $_POST['first_name'],
+        'last_name' => $_POST['last_name']
+    ];
+
+    $errors = validateStudentData($student_data);
+
+    if (empty($errors)) {
+        $duplicate_index = getSelectedStudentIndex($student_data['student_id']);
+        if ($duplicate_index !== null) {
+            $errors[] = "Student ID " . htmlspecialchars($student_data['student_id']) . " already exists.";
+        } else {
+            $_SESSION['student_data'][] = $student_data;
+            header("Location: register.php");
+            exit;
+        }
+    }
+}
+?>
 
 <div class="container mt-5">
 
-    <h2>Register a New Student</h2>
+    <h2 class="fw-bold">Register a New Student</h2>
     <br>
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
@@ -41,7 +76,7 @@
         <button type="submit" class="btn btn-primary">Add Student</button>
     </form>
     <hr>
-    <h3 class="mt-5">Student List</h3>
+    <h3 class="mt-5 fw-bold">Student List</h3>
     <table class="table">
         <thead>
             <tr>
