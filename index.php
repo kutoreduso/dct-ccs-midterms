@@ -35,6 +35,18 @@ $pageTitle="Log In";
         }
     }
     ?>
+    <main>
+    <div class="container">
+        <?php if (!empty($notification)): ?>
+            <div class="col-md-4 mb-3">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <strong>System Errors</strong>
+                    <?php echo $notification; ?>
+                    <button type="button" class="btn-close " data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        <?php endif; ?>
+        
 <form method= "POST" action="">
   <div class="p-4">
   <div class="card col-3 mx-auto">
@@ -54,6 +66,7 @@ $pageTitle="Log In";
   </div>
 </div>
 </form>
-
+</main>
 <?php 
     include("footer.php");
+    ?>
