@@ -1,4 +1,8 @@
 
+<?php 
+    include("header.php");
+
+?>
 <form>
   <div class="p-4">
   <div class="card col-3 mx-auto">
@@ -18,3 +22,7 @@
   </div>
 </div>
 </form>
+
+<?php 
+    include("footer.php");
+?>
