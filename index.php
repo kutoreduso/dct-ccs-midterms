@@ -7,7 +7,7 @@ include("header.php");
 include('function.php');
 
 
-if (!empty($_SESSION['txtemail'])) {
+if (!empty($_SESSION['email'])) {
     header("Location: dashboard.php");
     exit;
 }
@@ -21,14 +21,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $password = $_POST['txtpassword'] ?? '';
 
 
-    $errors = validateLoginCredentials($txtemail, $txtpassword);
+    $errors = validateLoginCredentials($email, $password);
     
     if (empty($errors)) {
         $users = getUsers();
         
 
-        if (checkLoginCredentials($txtemail, $txtpassword, $users)) {
-            $_SESSION['txtemail'] = $txtemail;
+        if (checkLoginCredentials($email, $password, $users)) {
+            $_SESSION['email'] = $email;
             $_SESSION['current_page'] = 'dashboard.php';
             header("Location: dashboard.php");
             exit;
