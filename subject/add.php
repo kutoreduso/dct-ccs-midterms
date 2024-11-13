@@ -17,9 +17,56 @@ header("Pragma: no-cache");
 checkUserSessionIsActive();
 guard();
 
-$errors = []; // Fixed typo (erros -> errors)
+$errors = [];
 $subject_data = [];
 
+if (!isset($_SESSION['subject_data'])) {
+    $_SESSION['subject_data'] = [];
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $subject_data = [
+        'subject_code' => $_POST['subject_code'],
+        'subject_name' => $_POST['subject_name']
+    ];
+
+    // Use the correct validation function for subject data
+    $errors = validateSubjectData($subject_data);
+
+    foreach ($_SESSION['subject_data'] as $existingSubject) {
+        if ($existingSubject['subject_code'] === $subject_data['subject_code']) {
+            $errors[] = "Duplicate Subject";
+            break;
+        }
+        if ($existingSubject['subject_name'] === $subject_data['subject_name']) {
+            $errors[] = "Duplicate Subject";
+            break;
+        }
+    }
+
+    if (empty($errors)) {
+        $_SESSION['subject_data'][] = $subject_data;
+
+        // Debugging: Check the session content
+        var_dump($_SESSION['subject_data']); 
+
+        // Redirect to the same page after adding the subject
+        header("Location: add.php");
+        exit;
+    }
+}
+
+// Function to validate subject data
+function validateSubjectData($subject_data) {
+    $errors = [];
+    if (empty($subject_data['subject_code'])) {
+        $errors[] = "Subject Code is required.";
+    }
+    if (empty($subject_data['subject_name'])) {
+        $errors[] = "Subject Name is required.";
+    }
+    return $errors;
+}
 ?>
 
 <!-- HTML Content Starts Here -->
@@ -33,6 +80,17 @@ $subject_data = [];
         </ol>
     </nav>
     <hr>
+    <?php if(!empty($errors)): ?>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>System Errors</strong>
+        <ul>
+            <?php foreach ($errors as $error): ?>
+                <li><?php echo htmlspecialchars($error); ?></li>
+            <?php endforeach; ?>
+        </ul>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <?php endif; ?>
 
     <form method="post">
         <div class="form-group">
@@ -58,7 +116,6 @@ $subject_data = [];
         </thead>
         <tbody>
             <?php 
-            // Ensure the correct session key is used and check if the subjects are set
             if (!empty($_SESSION['subject_data'])): 
                 foreach ($_SESSION['subject_data'] as $subject): ?>
                     <tr>
