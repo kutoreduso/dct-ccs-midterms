@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <?php include('header.php'); ?>
 
     <br>
-    <div class="container col-6">
+    <div class="container col-4">
         <?php if (!empty($notification)): ?>
             <div class="col-md-4 mb-3 mx-auto">
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -51,6 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </div>
             </div>
             </div>
+            
         <?php endif; ?>
         <form method="post">
             <div class="card col-5 p-3 mx-auto">
