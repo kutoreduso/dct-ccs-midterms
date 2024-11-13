@@ -1,8 +1,24 @@
 <?php
-    include('header.php');
+session_start(); 
+$pageTitle = "Dashboard";
+include('header.php');
+include('function.php');
+if (empty($_SESSION['email'])) {
+    header("Location: index.php");
+    exit;
+}
+
+
+header("Cache-Control: no-store, no-cache, must-revalidate"); 
+header("Cache-Control: post-check=0, pre-check=0", false); 
+header("Pragma: no-cache");
+
+checkUserSessionIsActive(); 
+guard(); 
 ?>
+
     <br>
-    <div class="container d-flex justify-content-between align-items-center col-md-7">
+    <div class=" container d-flex justify-content-between align-items-center col-md-7">
         <h4 class="fs-3 fw-bold">Welcome to the System:</h4>
         <button onclick="window.location.href='logout.php'" class="btn btn-danger">Logout</button>
     </div>
