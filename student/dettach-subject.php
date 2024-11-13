@@ -75,7 +75,7 @@
 ?>
 
 <div class="container mt-5">
-    <h2>Detach Subject from Student</h2>
+    <h2 class="fw-bold">Detach Subject from Student</h2>
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="../dashboard.php">Dashboard</a></li>
