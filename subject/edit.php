@@ -34,7 +34,7 @@
         }
     }
 
-    // Check if form is submitted
+
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['subject_name']) && $subjectindex !== null) {
         // Get the new subject name from the form
         $new_subject_name = $_POST['subject_name'];
@@ -47,6 +47,7 @@
         exit;
     }
 ?>
+
 <div class="container mt-5">
     <h2 class="fw-bold">Edit Subject</h2>
 
