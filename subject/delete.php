@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['subject_code'])) {
                 </ul>
                 <form method="POST">
                     <!-- Hidden input for the subject code to be deleted -->
-                    <input type="hidden" name="subject_code" value="<?= htmlspecialchars($subjectToDelete['subject_code']) ?>">
+                    <input type="hidden" name="subject_code" value="<?= htmlspecialchars($subjecttodelete['subject_code']) ?>">
                     <button type="button" class="btn btn-secondary" onclick="window.location.href='register.php';">Cancel</button>
                     <button type="submit" class="btn btn-primary">Delete Subject Record</button>
                 </form>
