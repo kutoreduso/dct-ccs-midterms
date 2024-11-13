@@ -12,35 +12,67 @@ if (empty($_SESSION['email'])) {
     header("Location: ../index.php");
     exit;
 }
-
-// Disable caching to prevent stale data from being shown
 header("Cache-Control: no-store, no-cache, must-revalidate"); 
 header("Cache-Control: post-check=0, pre-check=0", false); 
 header("Pragma: no-cache");
 
-// Check if the user session is still active and if the user has access permissions
 checkUserSessionIsActive();  
 guard();
 
-// Initialize variables to store student data and errors
 $studentToAttach = null;
 $errors = [];
 
-// Check if a student ID is passed in the URL
 if (isset($_GET['student_id'])) {
     $student_id = $_GET['student_id'];
 
-    // Look through the session's student data to find the student with the given ID
     if (!empty($_SESSION['student_data'])) {
         foreach ($_SESSION['student_data'] as $student) {
             if ($student['student_id'] === $student_id) {
-                $studentToAttach = $student; // Found the student, store their data
+                $studentToAttach = $student; 
                 break;
             }
         }
     }
 }
 
+
+
+if (isset($_GET['student_id'])) {
+    $student_id = $_GET['student_id'];
+    if(!empty($_SESSION['student_data'])) {
+        foreach($_SESSION['student_data'] as $student) {
+            if($student['student_id'] === $student_id) {
+                $studentToAttach = $student;
+                break;
+            }
+        }
+    }
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if (isset($_POST['subject_codes']) && !empty($_POST['subject_codes'])) {
+        $subject_codes = $_POST['subject_codes'];
+    
+        // Ensure session data for attached subjects exists
+        if (!isset($_SESSION['attached_subjects'])) {
+            $_SESSION['attached_subjects'] = []; // Fixed syntax error here
+        }
+    
+        // Initialize array for this student if not already set
+        if (!isset($_SESSION['attached_subjects'][$student_id])) {
+            $_SESSION['attached_subjects'][$student_id] = [];
+        }
+    
+        // Add selected subjects to the session data
+        $_SESSION['attached_subjects'][$student_id] = array_merge(
+            $_SESSION['attached_subjects'][$student_id],
+            $subject_codes
+        );
+    } else {
+        $errors[] = 'At least one subject should be selected.';
+    }
+    
+}
 ?>
 
 <!-- Start of HTML content -->
@@ -49,7 +81,7 @@ if (isset($_GET['student_id'])) {
     <h2>Attach Subject to Student</h2>
     <br>
     
-    <!-- Breadcrumb navigation for easier navigation through the application -->
+
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="../dashboard.php">Dashboard</a></li>
@@ -60,7 +92,7 @@ if (isset($_GET['student_id'])) {
     <hr>
     <br>
 
-    <!-- Display any system errors if present -->
+
     <?php if (!empty($errors)): ?>
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <strong>System Errors</strong>
@@ -73,7 +105,7 @@ if (isset($_GET['student_id'])) {
         </div>
     <?php endif; ?>
 
-    <!-- Display the selected student's information if found -->
+
     <?php if ($studentToAttach): ?>
         <div class="container">
             <h3>Selected Student Information</h3>
@@ -85,6 +117,38 @@ if (isset($_GET['student_id'])) {
     <?php endif; ?>
 
     <hr>
+    <form method="post">
+        <?php 
+        if (!empty($_SESSION['subject_data'])): 
+            $attached_subjects = $_SESSION['attached_subjects'][$student_id] ?? [];
+            $available_subjects = array_filter($_SESSION['subject_data'], function($subject) use ($attached_subjects) {
+                return !in_array($subject['subject_code'], $attached_subjects);
+            });
+
+            if (!empty($available_subjects)): 
+                echo '  <h3>Select Subjects to Attach</h3>';
+                foreach ($available_subjects as $subject): ?>
+                    <div>
+                        <input 
+                            type="checkbox" 
+                            name="subject_codes[]" 
+                            value="<?= htmlspecialchars($subject['subject_code']) ?>"
+                        >
+                        <?= htmlspecialchars($subject['subject_code']) ?> - <?= htmlspecialchars($subject['subject_name']) ?>
+                    </div>
+                <?php endforeach; ?>
+                <br>
+                <button type="submit" class="btn btn-primary">Attach Subjects</button>
+            <?php else: ?>
+                <p>No subjects available to attach.</p>
+            <?php endif;
+        else: ?>
+            <p>No subjects available. Please add subjects first.</p>
+        <?php endif; ?>
+    </form>
+
+    <hr>
+    <h3 class="mt-5">Attached Subjects for Student</h3>
     <table class="table">
         <thead>
             <tr>
@@ -94,13 +158,26 @@ if (isset($_GET['student_id'])) {
             </tr>
         </thead>
         <tbody>
-            <!-- Static message indicating no subjects are attached -->
-            <tr>
-                <td colspan="3" class="text-center">No subjects attached.</td>
-            </tr>
+            <?php if (!empty($_SESSION['attached_subjects'][$student_id])): ?>
+                <?php foreach ($_SESSION['attached_subjects'][$student_id] as $attached_code): ?>
+                    <?php foreach ($_SESSION['subject_data'] as $subject): ?>
+                        <?php if ($subject['subject_code'] === $attached_code): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($subject['subject_code']); ?></td>
+                                <td><?= htmlspecialchars($subject['subject_name']); ?></td>
+                                <td><a href="dettach-subject.php?student_id=<?= urlencode($student_id) ?>&subject_code=<?= urlencode($attached_code) ?>" class="btn btn-danger btn-sm">Detach Subject</a></td>
+                            </tr>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="3" class="text-center">No subjects attached.</td>
+                </tr>
+            <?php endif; ?>
         </tbody>
     </table>
 </div>
 
-<!-- Include the footer -->
+
 <?php include '../footer.php'; ?>
