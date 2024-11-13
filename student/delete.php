@@ -17,10 +17,26 @@ if (isset($_GET['student_id'])) {
         }
     }
 } else {
-    header("Location: register.php");  // <-- Add the semicolon here
+    header("Location: register.php");
     exit;
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['student_id'])) {
+    $student_id = $_POST['student_id'];
+
+    // Fix: Checking if 'student_data' is not empty
+    if (!empty($_SESSION['student_data'])) {
+        foreach ($_SESSION['student_data'] as $key => $student) {
+            if ($student['student_id'] === $student_id) {
+                unset($_SESSION['student_data'][$key]);
+                $_SESSION['student_data'] = array_values($_SESSION['student_data']);
+                break;
+            }
+        }
+    }
+    header("Location: register.php");
+    exit; // Ensure the script stops here after redirecting
+}
 ?>
 <div class="card p-3 container mt-5">
     <h2 class="fw-bold">Delete a Student</h2>
