@@ -1,6 +1,6 @@
 <?php 
     session_start();
-    $pagetitle = "Delete Subject";
+    $pagetitle = "Edit Subject"; // Changed to Edit Subject as title
     include '../header.php';
     include '../function.php';
 
@@ -20,9 +20,11 @@
     $subjecttoedit = null;
     $subjectindex = null;
 
+    // Check if subject_code is set in the request
     if(isset($_REQUEST['subject_code'])) {
         $subject_code = $_REQUEST['subject_code'];
 
+        // Locate the subject in session data
         foreach($_SESSION['subject_data'] as $key => $subject) {
             if($subject['subject_code'] === $subject_code) {
                 $subjecttoedit = $subject;
@@ -31,7 +33,21 @@
             }
         }
     }
+
+    // Check if form is submitted to update the subject name
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['subject_name']) && $subjectindex !== null) {
+        // Get the new subject name from the form
+        $new_subject_name = $_POST['subject_name'];
+
+        // Update the subject name in session data
+        $_SESSION['subject_data'][$subjectindex]['subject_name'] = $new_subject_name;
+
+        // Redirect to confirm the update (prevents form resubmission)
+        header("Location: edit.php?subject_code=" . urlencode($subject_code));
+        exit;
+    }
 ?>
+
 <div class="container mt-5">
     <h2 class="fw-bold">Edit Subject</h2>
 
