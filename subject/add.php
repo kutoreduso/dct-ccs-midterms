@@ -1,12 +1,12 @@
 <?php
 session_start();
-$pagetitle="Add Subject"; 
+$pagetitle = "Add Subject"; 
 include '../header.php';
 include '../function.php';
 
 // Check if user is logged in by checking session email
-if(empty($_SESSION['email'])) {
-    header("Location: ../index.php"); // Add the missing semicolon here
+if (empty($_SESSION['email'])) {
+    header("Location: ../index.php"); 
     exit; // Ensure the script halts after redirection
 }
 
@@ -56,4 +56,27 @@ $subject_data = [];
                 <th>Options</th>
             </tr>
         </thead>
-<?php include '../footer.php' ?>
+        <tbody>
+            <?php 
+            // Ensure the correct session key is used and check if the subjects are set
+            if (!empty($_SESSION['subject_data'])): 
+                foreach ($_SESSION['subject_data'] as $subject): ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($subject['subject_code']); ?></td>
+                        <td><?php echo htmlspecialchars($subject['subject_name']); ?> </td>
+                        <td>
+                            <a href="edit.php?subject_code=<?php echo urlencode($subject['subject_code']);?>" class="btn btn-info btn-sm">Edit</a>
+                            <a href="delete.php?subject_code=<?php echo urlencode($subject['subject_code']);?>" class="btn btn-danger btn-sm">Delete</a>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="3" class="text-center">No subjects available.</td>
+                </tr>
+            <?php endif; ?>
+        </tbody>
+    </table>
+</div>
+
+<?php include '../footer.php'; ?>
