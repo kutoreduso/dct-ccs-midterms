@@ -8,11 +8,11 @@ guard();
 if (isset($_GET['subject_code'])) {
     $subject_code = $_GET['subject_code'];
 
-    $subjectToDelete = null;
+    $subjecttodelete = null;
     if (!empty($_SESSION['subject_data'])) {
         foreach ($_SESSION['subject_data'] as $subject) {
             if ($subject['subject_code'] === $subject_code) {
-                $subjectToDelete = $subject;
+                $subjecttodelete = $subject;
                 break;
             }
         }
