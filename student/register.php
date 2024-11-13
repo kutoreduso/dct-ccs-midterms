@@ -1,6 +1,6 @@
 <?php
 session_start();
-$pageTitle = "Register Student";
+$pagetitle = "Register Student";
 include ('../header.php');
 include ('../function.php');
 guard();
