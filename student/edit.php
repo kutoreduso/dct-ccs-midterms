@@ -3,8 +3,27 @@ session_start();
 $pageTitle = "Edit Student";
 include '../header.php';
 include '../function.php';
+guard();
+
+$errors = [];
+$studentToEdit = null;
+$studentIndex = null;
+
+if(isset($_REQUEST['student_id'])) {
+    $student_id = $_REQUEST['student_id'];
+
+        foreach($_SESSION['student_data'] as $key => $student) {
+            if ($student['student_id'] === $student_id) {
+                $studentToEdit = $student;
+                $studentIndex = $key;
+                break;
+        }
+    }
+}
+
+
 ?>
-<div class="container mt-5">
+<div class="card p-3 container mt-5">
     <h2>Edit Student</h2>
     <br>
     <nav aria-label="breadcrumb">
