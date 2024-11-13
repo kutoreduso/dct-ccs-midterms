@@ -31,7 +31,7 @@
             }
         }
     }
-
+?>
 <div class="container mt-5">
     <h2 class="fw-bold">Edit Subject</h2>
 
@@ -55,8 +55,6 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     <?php endif; ?>
-
-
 
     <?php if ($subjecttoedit): ?>
         <form action="edit.php?subject_code=<?= urlencode($subjecttoedit['subject_code']) ?>" method="post">
