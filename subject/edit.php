@@ -32,24 +32,6 @@
         }
     }
 
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['subject_code'])) {
-        $updateData = [
-            'subject_code' => $_POST['subject_code'],
-            'subject_name' => $_POST['subject_name'], // Fixed typo and removed the period
-        ];
-
-        if (empty($updateData['subject_name'])) {
-            $errors[] = "Subject Name is required.";
-        }
-
-        if (empty($errors) && $subjectindex !== null) {
-            $_SESSION['subject_data'][$subjectindex] = $updateData;
-            header("Location: add.php");
-            exit;
-        }
-    }
-?>
-
 <div class="container mt-5">
     <h2 class="fw-bold">Edit Subject</h2>
 
@@ -73,6 +55,8 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     <?php endif; ?>
+
+
 
     <?php if ($subjecttoedit): ?>
         <form action="edit.php?subject_code=<?= urlencode($subjecttoedit['subject_code']) ?>" method="post">
