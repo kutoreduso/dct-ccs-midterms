@@ -4,6 +4,23 @@ $pagetitle = "Edit Student";
 include '../header.php';
 include '../function.php';
 guard();
+
+if (isset($_GET['student_id'])) {
+    $student_id = $_GET['student_id'];
+    
+    $studenttodelete = null;
+    if (!empty($_SESSION['student_data'])) {
+        foreach($_SESSION['student_data'] as $student) {
+            if($student['student_id'] === $student_id) {
+                $studenttodelete = $student;
+            }
+        }
+    }
+} else {
+    header("Location: register.php");  // <-- Add the semicolon here
+    exit;
+}
+
 ?>
 <div class="card p-3 container mt-5">
     <h2 class="fw-bold">Delete a Student</h2>
@@ -16,15 +33,15 @@ guard();
     </nav>
     <div class="card mt-3">
         <div class="card-body">
-            <?php if ($studentToDelete): ?>
+            <?php if ($studenttodelete): ?>
                 <h5>Are you sure you want to delete the following student record?</h5>
                 <ul>
-                    <li><strong>Student ID:</strong> <?= htmlspecialchars($studentToDelete['student_id']) ?></li>
-                    <li><strong>First Name:</strong> <?= htmlspecialchars($studentToDelete['first_name']) ?></li>
-                    <li><strong>Last Name:</strong> <?= htmlspecialchars($studentToDelete['last_name']) ?></li>
+                    <li><strong>Student ID:</strong> <?= htmlspecialchars($studenttodelete['student_id']) ?></li>
+                    <li><strong>First Name:</strong> <?= htmlspecialchars($studenttodelete['first_name']) ?></li>
+                    <li><strong>Last Name:</strong> <?= htmlspecialchars($studenttodelete['last_name']) ?></li>
                 </ul>
                 <form method="POST">
-                    <input type="hidden" name="student_id" value="<?= htmlspecialchars($studentToDelete['student_id']) ?>">
+                    <input type="hidden" name="student_id" value="<?= htmlspecialchars($studenttodelete['student_id']) ?>">
                     <button type="button" class="btn btn-secondary" onclick="window.location.href='register.php';">Cancel</button>
                     <button type="submit" class="btn btn-primary">Delete Student Record</button>
                 </form>
