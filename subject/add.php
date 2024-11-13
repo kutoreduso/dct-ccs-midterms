@@ -70,7 +70,7 @@ function validateSubjectData($subject_data) {
 ?>
 
 <!-- HTML Content Starts Here -->
-<div class="container mt-5">
+<div class="card container mt-5">
     <h2 class="fw-bold">Add a New Subject</h2>
 
     <nav aria-label="breadcrumb">
